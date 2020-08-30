@@ -102,7 +102,14 @@ const StyledLogin = styled.div`
     height: 100vh;
     width: 100vw;
     
-    
+    & .login-card {
+      min-width: 375px;
+      padding: 30px;
+      background-color: #fff;
+      background-clip: border-box;
+      border: 1px solid rgba(0,0,0,.125);
+      border-radius: .25rem;
+    }
   }
 `
 

@@ -8,14 +8,15 @@ interface Props {
 }
 
 interface State {
-    firstname: string,
-    lastname: string,
-    email: string,
-    password: string,
-    confirmpassword: string,
-    formErrors: string[],
-    formError: boolean,
+    firstname: string
+    lastname: string
+    email: string
+    password: string
+    confirmpassword: string
+    formErrors: string[]
+    formError: boolean
     formErrorMsg: string
+    type: string
 }
 
 class SignUp extends React.Component<Props, State> {
@@ -29,13 +30,15 @@ class SignUp extends React.Component<Props, State> {
         confirmpassword: '',
         formErrors: [],
         formError: false,
-        formErrorMsg: ""
+        formErrorMsg: "",
+        type: 'password'
     }
 
     this.inputCheck = this.inputCheck.bind(this)
     this.handleSignUp = this.handleSignUp.bind(this)
     this.verifyUserEmail = this.verifyUserEmail.bind(this)
     this.verifyUserPassword = this.verifyUserPassword.bind(this)
+    this.showHide = this.showHide.bind(this)
   }
 
   public verifyUserEmail (email: string) {
@@ -112,6 +115,14 @@ class SignUp extends React.Component<Props, State> {
     this.setState(stateChange)
   }
 
+  public showHide(e: React.MouseEvent<HTMLInputElement>): void{
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      type: this.state.type === 'text' ? 'password' : 'text'
+    })  
+  }
+
   public render () {
    const { formErrors, formErrorMsg } = this.state
     return (
@@ -166,7 +177,7 @@ class SignUp extends React.Component<Props, State> {
                 
                 <div className='form-label-group'>
                 <TextInput
-                    type='password'
+                    type={this.state.type}
                     id='password'
                     name='password'
                     addClassName='form-control'
@@ -175,11 +186,14 @@ class SignUp extends React.Component<Props, State> {
                     onChange={this.inputCheck}
                     fieldError={formErrors.includes('password')}
                 />
+                { this.state.password && 
+                    <span className="password_show" onClick={this.showHide}>{this.state.type === 'text' ? 'Hide' : 'Show'}</span>
+                }
                 <label htmlFor='password'>Password</label>
                 </div>
                 <div className='form-label-group'>
                 <TextInput
-                    type='password'
+                    type={this.state.type}
                     id='confirmpassword'
                     name='confirmpassword'
                     addClassName='form-control'
@@ -211,6 +225,19 @@ padding-top: 10px;
 .font-style {
     font-size: 12px;
 }
+
+.password_show{
+      cursor: pointer;
+      position: absolute;
+      bottom: 11px;
+      height: 16px;
+      right: 0;
+      color: black;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: .8em;
+    }
 
 @media (max-width: 767px) {
     max-width: 345px;

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import TextInput from '../components/Form/TextInput'
+import { Link } from 'react-router-dom'
 
 interface Props {
     
@@ -12,7 +13,7 @@ interface State {
     email: string,
     password: string,
     confirmpassword: string,
-    formFieldErrors: string[],
+    formErrors: string[],
     formError: boolean,
     formErrorMsg: string
 }
@@ -26,25 +27,67 @@ class SignUp extends React.Component<Props, State> {
         email: '',
         password: '',
         confirmpassword: '',
-        formFieldErrors: [],
+        formErrors: [],
         formError: false,
         formErrorMsg: ""
     }
 
     this.inputCheck = this.inputCheck.bind(this)
     this.handleSignUp = this.handleSignUp.bind(this)
+    this.verifyUserEmail = this.verifyUserEmail.bind(this)
+    this.verifyUserPassword = this.verifyUserPassword.bind(this)
+  }
+
+  public verifyUserEmail (email: string) {
+    const re = /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return re.test(String(email).toLowerCase())
+  }
+
+  public verifyUserPassword (password: string) {
+    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/
+    return re.test(String(password))
   }
 
   public handleSignUp (e: React.MouseEvent | React.FormEvent) {
     e.preventDefault()
     console.log('this.state', this.state)
-    const formData: any = {
+    const userInfo: any = {
       firstname: this.state.firstname,
       lastname: this.state.lastname,
       email: this.state.email,
       password: this.state.password,
       confirmpassword: this.state.confirmpassword
     }
+
+    let errorCount: any[] = []
+    Object.keys(userInfo).map((key: string) => {
+      if (!userInfo[key]) errorCount.push(key)
+      return 0;
+    })
+
+    this.setState({ formErrors: errorCount }, () => {
+        if (this.state.formErrors.length) {
+          this.setState({ formError: true, formErrorMsg: 'Please fill in the missing fields' })
+        } else if (!this.verifyUserEmail(this.state.email)) {
+          this.setState({ formError: true, formErrorMsg: 'Please enter a valid email address', formErrors: ['email'] })
+        } else if (!this.verifyUserPassword(userInfo.password)) {
+          this.setState({ formError: true, formErrorMsg: `8 characters, 1 uppercase, number and special character.`, formErrors: ['password'] })
+        } else if (userInfo.password !== userInfo.confirmpassword) {
+          this.setState({ formError: true, formErrorMsg: 'Passwords do not match. Please re-enter', formErrors: ['confirmpassword'] })
+        } else {
+        //   this.props.setLoadingOverlay(true);
+        //   this.props.signupApp(userInfo)
+        //     .then((res: SignupResult) => {
+        //       this.props.setLoadingOverlay(false)
+        //     })
+        //     .catch((err: any) => {
+        //       this.props.setSignupErr(err)
+        //       this.props.setLoadingOverlay(false)
+        //     })
+        }
+      })
+
+
   }
 
   public inputCheck (e: React.ChangeEvent<HTMLInputElement>): void {
@@ -67,7 +110,7 @@ class SignUp extends React.Component<Props, State> {
   }
 
   public render () {
-   
+   const { formErrors, formErrorMsg } = this.state
     return (
         <StyledRegister>
             <div className='signup-card' >
@@ -86,6 +129,7 @@ class SignUp extends React.Component<Props, State> {
                         placeholder='First Name'
                         isRequired
                         onChange={this.inputCheck}
+                        fieldError={formErrors.includes('firstname')}
                     />
                     <label htmlFor='password'>First Name</label>
                     </div>
@@ -100,6 +144,7 @@ class SignUp extends React.Component<Props, State> {
                         placeholder='Last Name'
                         isRequired
                         onChange={this.inputCheck}
+                        fieldError={formErrors.includes('lastname')}
                     />
                     <label htmlFor='password'>Last Name</label>
                     </div>
@@ -114,6 +159,7 @@ class SignUp extends React.Component<Props, State> {
                     placeholder='Email address'
                     isRequired
                     onChange={this.inputCheck}
+                    fieldError={formErrors.includes('email')}
                 />
                 <label htmlFor='password'>Email</label>
                 </div>
@@ -127,6 +173,7 @@ class SignUp extends React.Component<Props, State> {
                     placeholder='Password'
                     isRequired
                     onChange={this.inputCheck}
+                    fieldError={formErrors.includes('password')}
                 />
                 <label htmlFor='password'>Password</label>
                 </div>
@@ -139,11 +186,19 @@ class SignUp extends React.Component<Props, State> {
                     placeholder='Confirm Password'
                     isRequired
                     onChange={this.inputCheck}
+                    fieldError={formErrors.includes('confirmpassword')}
                 />
                 <label htmlFor='password'>Confirm Password</label>
                 </div>
-                <button className='btn btn-primary' type='submit' onClick={this.handleSignUp}>SignUp</button>
+                <button className='btn btn-primary btn-lg btn-grad mt-3' type='submit' onClick={this.handleSignUp}>SignUp</button>
             </form>
+            {
+                (formErrorMsg) && <div className='alert alert-danger text-center mt-3 font-style'>{(formErrorMsg)}</div>
+            }
+
+            <p className='light-font muted no-account mt-2'>Already have an account?
+                <Link className='pl-1 signup-link' to='/login' >Login!</Link>
+            </p>
             
             </div>
         </StyledRegister>  
@@ -153,6 +208,9 @@ class SignUp extends React.Component<Props, State> {
 
 const StyledRegister = styled.div`
 padding-top: 10px;
+.font-style {
+    font-size: 12px;
+}
 
 @media (max-width: 767px) {
     max-width: 345px;

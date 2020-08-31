@@ -36,7 +36,7 @@ class Login extends React.Component <Props, State> {
               <div className='login-card'>
                 <form className='pt-0' onSubmit={this.handleLogin}>
                   <span style={{display: 'inline-flex'}} className="form-header">
-                      User Login
+                    Login
                   </span>
                   
                   <div className='form-label-group mt-4'>
@@ -62,18 +62,19 @@ class Login extends React.Component <Props, State> {
                       isRequired
                       onChange={this.inputChange}
                     />
+                    <label htmlFor='password'>Password</label>
                   </div>
       
-                  <button className='btn btn-lg btn-primary btn-block btn-grad' type='submit' onClick={this.handleLogin}>LoginSignUp</button>
+                  <button className='btn btn-lg btn-primary btn-block btn-grad mt-3' type='submit' onClick={this.handleLogin}>Login</button>
                 </form>
-                
-                <p className='light-font muted no-account mb-0'>NoLoginAcc
-                  <Link className='pl-1 signup-link' to='/signup' >SignUpLink</Link>
-                </p>
-
                 <div className='forgot-password-link mb-4 mt-3'>
                     <Link className='light-font' to='/resetpassword' >ForgotPassword</Link>
-                  </div>
+                </div>
+                
+                <p className='light-font muted no-account mb-0'>Not yet Registered?
+                  <Link className='pl-1 signup-link' to='/signup' >Sign Up!</Link>
+                </p>
+
 
                 
               </div>

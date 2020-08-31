@@ -280,6 +280,11 @@ padding-top: 10px;
 @media (max-width: 767px) {
     max-width: 345px;
     margin: 0 auto;
+
+    .imgPreview {
+        width: 330px;
+        height: 200px;
+    }
   }
 
 @media (min-width: 768px) {

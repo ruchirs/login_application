@@ -37,7 +37,7 @@ class Header extends React.Component<Props, State>{
                         <a className="nav-link" href="/dashboard">Home <span className="sr-only">(current)</span></a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="/submission">Submission</a>
+                        <a className="nav-link" href="/submission">Account</a>
                     </li>
                     <li className="nav-item logout">
                         <a className="nav-link" href="/login">Logout</a>

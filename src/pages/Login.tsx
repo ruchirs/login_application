@@ -9,7 +9,11 @@ interface Props {
 }
 
 interface State {
-    page: string
+    email: string
+    password: string
+    formErrors: string[]
+    formError: boolean
+    formErrorMsg: string
 }
 
 class Login extends React.Component <Props, State> {
@@ -17,17 +21,64 @@ class Login extends React.Component <Props, State> {
     public constructor (props: Props){
         super(props)
         this.state = {
-            page: 'Login'
+            email: '',
+            password: '',
+            formError: false,
+            formErrors: [],
+            formErrorMsg: ''
         }
 
+        this.verifyUserEmail = this.verifyUserEmail.bind(this)
+        this.handleLogin = this.handleLogin.bind(this)
+        this.inputChange = this.inputChange.bind(this)
     }
 
-    public handleLogin () {
-
+    public verifyUserEmail (email: string) {
+        const re = /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return re.test(String(email).toLowerCase())
     }
 
-    public inputChange () {
+    public handleLogin (e: React.MouseEvent | React.FormEvent) {
+        e.preventDefault()
+        let userInfo = JSON.parse(localStorage.getItem('userInfo') as any)
+        const formData: any = {
+        email: this.state.email,
+        password: this.state.password
+        }
 
+        let errorArr: string[] = []
+        Object.keys(formData).map((key: string) => {
+            if (!formData[key]) errorArr.push(key)
+            return 0;
+        })
+
+        if (this.state.formErrors.length) {
+            this.setState({ formError: true, formErrorMsg: 'Please complete the missing fields' })
+        } else if (!this.verifyUserEmail(this.state.email)) {
+            this.setState({ formError: true, formErrorMsg: 'Please complete the missing fields', formErrors: ['email'] })
+        } else {
+            if ((formData.email === userInfo.email) && (formData.password === userInfo.password)) {
+                window.location.href = '/dashboard'
+            }
+        }
+    }
+
+    public inputChange (e: React.ChangeEvent<HTMLInputElement>): void {
+        e.persist()
+        let keys = ['email', 'password']
+        let target = Reflect.get(e, 'target')
+        console.log('keys', keys)
+        console.log('target', target)
+
+        let stateChange = {}
+
+        keys.forEach(thisKey => {
+        if (Reflect.get(target, 'id') === thisKey) {
+            Reflect.set(stateChange, thisKey, Reflect.get(target, 'value'))
+        }
+        })
+
+        this.setState(stateChange)
     }
 
     render(){

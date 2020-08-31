@@ -25,13 +25,31 @@ class Dashboard extends React.Component<Props, State> {
     return (
         <StyledDashboard>
             <Header />
+
+            <StyledContent>
+                <div>
+                    <h1>Welcome, this is your dashboard.</h1>
+                </div>
+            </StyledContent>
         </StyledDashboard>  
         )
   }
 }
 
 const StyledDashboard = styled.div`
+height: 100vh;
+width: 100vw;
+`
 
+const StyledContent = styled.div`
+    
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding 5rem 1rem;
 `
 
 export default Dashboard

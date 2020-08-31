@@ -75,6 +75,9 @@ class SignUp extends React.Component<Props, State> {
         } else if (userInfo.password !== userInfo.confirmpassword) {
           this.setState({ formError: true, formErrorMsg: 'Passwords do not match. Please re-enter', formErrors: ['confirmpassword'] })
         } else {
+            this.setState({
+                formErrorMsg: ''
+            })
         //   this.props.setLoadingOverlay(true);
         //   this.props.signupApp(userInfo)
         //     .then((res: SignupResult) => {
@@ -115,9 +118,6 @@ class SignUp extends React.Component<Props, State> {
         <StyledRegister>
             <div className='signup-card' >
             <form className='pt-0' onSubmit={this.handleSignUp}>
-                <span>
-                Sign Up
-                </span>
                 <div className='row mt-4'>
                 <div className='col'>
                     <div className='form-label-group'>

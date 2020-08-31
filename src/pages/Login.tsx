@@ -35,9 +35,6 @@ class Login extends React.Component <Props, State> {
             <StyledLogin className='Login'>
               <div className='login-card'>
                 <form className='pt-0' onSubmit={this.handleLogin}>
-                  <span style={{display: 'inline-flex'}} className="form-header">
-                    Login
-                  </span>
                   
                   <div className='form-label-group mt-4'>
                     <TextInput
@@ -88,9 +85,7 @@ const StyledLogin = styled.div`
 
   @media (max-width: 767px) {
     max-width: 345px;
-    .language-picker {
-      margin: -1px 0px;
-    }
+    margin: 0 auto;
   }
 
   @media (min-width: 768px) {

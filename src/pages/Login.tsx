@@ -45,11 +45,11 @@ class Login extends React.Component <Props, State> {
                       id='email'
                       name='email'
                       addClassName='form-control'
-                      placeholder='Email address'
+                      placeholder='Email Address'
                       isRequired
                       onChange={this.inputChange}
                     />
-                    <label htmlFor='email'>Email</label>
+                    <label htmlFor='email'>Email Address</label>
                   </div>
       
                   <div className='form-label-group mb-1'>

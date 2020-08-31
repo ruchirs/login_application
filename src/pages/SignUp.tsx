@@ -17,6 +17,8 @@ interface State {
     formError: boolean
     formErrorMsg: string
     type: string
+    file: string | ArrayBuffer | null
+    imagePreviewUrl: string | ArrayBuffer | null
 }
 
 class SignUp extends React.Component<Props, State> {
@@ -30,8 +32,10 @@ class SignUp extends React.Component<Props, State> {
         confirmpassword: '',
         formErrors: [],
         formError: false,
-        formErrorMsg: "",
-        type: 'password'
+        formErrorMsg: '',
+        type: 'password',
+        file: '',
+        imagePreviewUrl: ''
     }
 
     this.inputCheck = this.inputCheck.bind(this)
@@ -39,6 +43,7 @@ class SignUp extends React.Component<Props, State> {
     this.verifyUserEmail = this.verifyUserEmail.bind(this)
     this.verifyUserPassword = this.verifyUserPassword.bind(this)
     this.showHide = this.showHide.bind(this)
+    this.handleImageChange = this.handleImageChange.bind(this)
   }
 
   public verifyUserEmail (email: string) {
@@ -59,7 +64,8 @@ class SignUp extends React.Component<Props, State> {
       lastname: this.state.lastname,
       email: this.state.email,
       password: this.state.password,
-      confirmpassword: this.state.confirmpassword
+      confirmpassword: this.state.confirmpassword,
+      file: this.state.imagePreviewUrl
     }
 
     let errorCount: any[] = []
@@ -77,23 +83,16 @@ class SignUp extends React.Component<Props, State> {
           this.setState({ formError: true, formErrorMsg: `8 characters, 1 uppercase, number and special character.`, formErrors: ['password'] })
         } else if (userInfo.password !== userInfo.confirmpassword) {
           this.setState({ formError: true, formErrorMsg: 'Passwords do not match. Please re-enter', formErrors: ['confirmpassword'] })
+        } else if (userInfo.file === '') {
+          this.setState({ formError: true, formErrorMsg: 'Please upload your ID', formErrors: ['file-upload'] })
         } else {
-            this.setState({
-                formErrorMsg: ''
-            })
-        //   this.props.setLoadingOverlay(true);
-        //   this.props.signupApp(userInfo)
-        //     .then((res: SignupResult) => {
-        //       this.props.setLoadingOverlay(false)
-        //     })
-        //     .catch((err: any) => {
-        //       this.props.setSignupErr(err)
-        //       this.props.setLoadingOverlay(false)
-        //     })
+          this.setState({
+            formErrorMsg: ''
+          })
+          localStorage.setItem('userInfo', JSON.stringify(userInfo))
+          window.location.href = '/dashboard'
         }
       })
-
-
   }
 
   public inputCheck (e: React.ChangeEvent<HTMLInputElement>): void {
@@ -123,8 +122,24 @@ class SignUp extends React.Component<Props, State> {
     })  
   }
 
+  public handleImageChange(e: any) {
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        imagePreviewUrl: reader.result
+      });
+    }
+
+    reader.readAsDataURL(file)
+  }
+
   public render () {
-   const { formErrors, formErrorMsg } = this.state
+   const { formErrors, formErrorMsg, imagePreviewUrl } = this.state
     return (
         <StyledRegister>
             <div className='signup-card' >
@@ -204,7 +219,14 @@ class SignUp extends React.Component<Props, State> {
                 />
                 <label htmlFor='password'>Confirm Password</label>
                 </div>
-                <button className='btn btn-primary btn-lg btn-grad mt-3' type='submit' onClick={this.handleSignUp}>SignUp</button>
+                <div>
+                    <input className="fileInput" type="file" onChange={(e)=>this.handleImageChange(e)} />
+                    <div className="imgPreview">
+                        {imagePreviewUrl ? <img className='img-styles' alt='preview' src={imagePreviewUrl as string} /> : 'Please upload an Image for Preview'}
+                    </div>
+                    <label htmlFor='file-upload'></label>
+                </div>
+                <button className='btn btn-primary btn-lg btn-grad' type='submit' onClick={this.handleSignUp}>SignUp</button>
             </form>
             {
                 (formErrorMsg) && <div className='alert alert-danger text-center mt-3 font-style'>{(formErrorMsg)}</div>
@@ -224,6 +246,22 @@ const StyledRegister = styled.div`
 padding-top: 10px;
 .font-style {
     font-size: 12px;
+}
+
+.img-styles {
+    width: 100%;
+    height: 100%
+}
+
+.imgPreview {
+  text-align: center;
+  margin: 5px 0px;
+  height: 200px;
+  width: 500px;
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
+  border-top: 5px solid gray;
+  border-bottom: 5px solid gray;
 }
 
 .password_show{

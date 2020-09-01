@@ -115,11 +115,11 @@ class Login extends React.Component <Props, State> {
       
                   <button className='btn btn-lg btn-primary btn-block btn-grad mt-3' type='submit' onClick={this.handleLogin}>Login</button>
                 </form>
-                <div className='forgot-password-link mb-4 mt-3'>
+                {/* <div className='forgot-password-link mb-4 mt-3'>
                     <Link className='light-font' to='/resetpassword' >ForgotPassword</Link>
-                </div>
+                </div> */}
                 
-                <p className='light-font muted no-account mb-0'>Not yet Registered?
+                <p className='light-font muted no-account mt-2'>Not yet Registered?
                   <Link className='pl-1 signup-link' to='/signup' >Sign Up!</Link>
                 </p>
 
